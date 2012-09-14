@@ -12,15 +12,15 @@
         <div id="participant">
             <h2>Insert your name and click start to begin:</h2>
             <input type="text" name="participant" />
-            <input type="button" value="start" data-bind="click: play"/>
+            <input type="button" value="start" data-bind="click: play" />
         </div>
         <br/>
         <div id="survey">
             <span data-bind="text: question">Qual a capital da Rússia?</span>
             <ul data-bind="foreach: answers">
                 <li style="list-style: none;">
-                    <input type="radio" name="answer"/>
-                    <span data-bind="text: $data">Moscou</span>                  
+                    <input type="radio" name="answer" data-bind="click: answer" />
+                    <span data-bind="text: $data">Moscou</span>
                 </li>
             </ul>
             <span id="message"></span>
@@ -32,8 +32,20 @@
                     self.answers = ko.observableArray([]);
 
                     self.play = function() {
-                        self.question("Qual é a capital da Rússia?")
-                        self.answers.push("Servia");
+                        $.getJSON("/thinkfast", {action: "play", name: self.participant()}, function(data) {
+                            self.question(data.description);
+                            self.answers.removeAll();
+                            $.map(data.answers, function(answer) {
+                                self.answers.push(answer);
+                            });
+                        });
+                    }
+
+                    self.bind = function() {
+
+                    }
+                    self.answer = function(answer) {
+                        
                     }
                 }
                 ko.applyBindings(new ThinkFast());

@@ -1,28 +1,40 @@
-package br.com.senac.css.thinkfast;
+package br.com.senac.ccs.thinkfast;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.Arrays;
 import javax.servlet.*;
 import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
-@WebServlet(urlPatterns = {"/thinkfast"}, asyncSupported = true)
+@WebServlet(urlPatterns = {"/thinkfast"}, asyncSupported = true, loadOnStartup = 1)
 public class ThinkFastController extends HttpServlet {
 
-	@Override
-	protected void doGet (HttpServletRequest req, HttpServletResponse resp)	throws ServletException, IOException {
-		super.doGet(req, resp);
-	}
+    private ThinkFastGame game;
 
-	public class Question {
-		private String description;
-		private java.util.List<String> answers;
-		private String corretAnswer;
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        game = new ThinkFastGame();
+        game.init();
+    }
 
-		public Question(String description, java.util.List<String> answers, String corretAnswer) {
-			this.description = description;
-			this.answers = answers;
-			this.corretAnswer = corretAnswer;
-		}
-	}
-	
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String action = req.getParameter( "action" );
+        String id = req.getSession().getId();
+        if ( "play".equals( action ) ) {
+            String name = req.getParameter( "name" );
+            AsyncContext async = req.startAsync();
+            game.play(id,name, async);
+        }
+        else if ( "answer".equals( action ) ) {
+            String answer = req.getParameter("answer");
+            game.answer(id, answer);
+        }
+        else if ( "bind".equals( action ) ) {
+            AsyncContext async = req.startAsync();
+            game.bind(id, async);
+        }
+    }
 }
