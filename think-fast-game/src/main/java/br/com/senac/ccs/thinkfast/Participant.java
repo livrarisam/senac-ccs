@@ -3,6 +3,7 @@ package br.com.senac.ccs.thinkfast;
 import java.io.IOException;
 import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletResponse;
+import com.fasterxml.jackson.databind.*;
 
 public class Participant {
 
@@ -46,6 +47,14 @@ public class Participant {
         this.asyncContext = asyncContext;
     }
 
+    private static final ObjectMapper mapper = new ObjectMapper();
     public void notify( Result result ) throws IOException {
+        if(asyncContext != null) {
+            HttpServletResponse response = (HttpServletResponse) asyncContext.getResponse();
+            response.getWriter().write(mapper.writeValueAsString(result));
+            response.flushBuffer();
+            asyncContext.complete();
+            asyncContext = null;
+        }
     }
 }

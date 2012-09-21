@@ -1,7 +1,10 @@
 package br.com.senac.ccs.thinkfast;
 
+import com.fasterxml.jackson.annotation.*;
+
 import java.util.List;
 
+@JsonInclude (JsonInclude.Include.NON_NULL)
 public class Question {
 
     private String description;
@@ -23,5 +26,9 @@ public class Question {
 
     public List<String> getAnswers() {
         return answers;
+    }
+
+    public String getAnswer() {
+        return answer;
     }
 }

@@ -12,29 +12,61 @@
         <div id="participant">
             <h2>Insert your name and click start to begin:</h2>
             <input type="text" name="participant" />
-            <input type="button" value="start" data-bind="click: play"/>
+            <input type="button" value="start" data-bind="click: play" />
         </div>
         <br/>
         <div id="survey">
             <span data-bind="text: question">Qual a capital da Rússia?</span>
             <ul data-bind="foreach: answers">
                 <li style="list-style: none;">
-                    <input type="radio" name="answer"/>
-                    <span data-bind="text: $data">Moscou</span>                  
+                    <input type="radio" name="answer" data-bind="click: $root.answer" />
+                    <span data-bind="text: $data">Moscou</span>
                 </li>
             </ul>
-            <span id="message"></span>
+            <span id="message" data-bind="text: message"></span>
             <script>
                 var ThinkFast = function () {
                     var self = this;
                     self.participant = ko.observable();
                     self.question = ko.observable();
                     self.answers = ko.observableArray([]);
+                    self.message = ko.observable();
 
                     self.play = function() {
-                        self.question("Qual é a capital da Rússia?")
-                        self.answers.push("Servia");
+                        $.getJSON("/thinkfast", {action: "play", name: self.participant()}, function(data) {
+                            self.parseResult(data);
+                            self.bind();
+                        });
                     }
+
+                    self.bind = function() {
+                        $.getJSON("/thinkfast", {action: "bind"}, function(data) {
+                            self.parseResult(data);
+                        }).complete( function(data) {
+                            self.bind();
+                        });
+                    }
+                    self.answer = function(answer) {
+                        $.getJSON("/thinkfast", {action: "answer", answer: answer}, function(data) {
+                            self.parseResult(data);
+                        });                          
+                    }
+
+                    self.parseResult = function(data)
+                    {
+                            if (data.question) {
+
+                                self.question(data.description);
+                                self.answers.removeAll();
+
+                                $.map(data.answers, function(answer) {
+                                    self.answers.push(answer);
+                                });
+                                
+                            }   
+                            self.message (data.message); 
+                    }
+
                 }
                 ko.applyBindings(new ThinkFast());
             </script>
