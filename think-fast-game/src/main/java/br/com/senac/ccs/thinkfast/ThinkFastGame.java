@@ -28,8 +28,9 @@ public class ThinkFastGame {
 	   lock.lock();
        try {
             Participant participant = new Participant (id, name, asyncContext);
+
             participants.put(id, participant);
-            participant.notify (new Result(currentQuestion, "Welcome!") );
+            participant.notify (new Result(currentQuestion, String.format("Welcome %s!", participant.getName())) );
         }
         finally {
             lock.unlock();
@@ -61,7 +62,7 @@ public class ThinkFastGame {
 
             } else {
                 Participant participant = participants.get(id);
-                participant.notify(new Result("Nope!! :("));
+                participant.notify(new Result("Incorreto!! :("));
             }
         }
         finally {
@@ -72,6 +73,9 @@ public class ThinkFastGame {
     public void init() {
         this.questions.add( new Question( "Qual a capital dos EUA?", Arrays.asList( new String[]{ "Washington DC", "California", "Nevada" } ), "Washington DC" ) );
         this.questions.add( new Question( "Qual a capital da Russia?", Arrays.asList( new String[]{ "Berlin", "Paris", "Moscou" } ), "Moscou" ) );
+        this.questions.add( new Question( "Qual a resposta da vida, do universo e tudo mais?", Arrays.asList( new String[]{ "32", "42", "52" } ), "42" ) );
+        this.questions.add( new Question( "Entre as opcoes, qual nao e um sistema operacional?", Arrays.asList( new String[]{ "Windows", "MAC OS", "Linux" } ), "Windows" ) );
+        this.questions.add( new Question( "Qual e a funcao do Internet Explorer?", Arrays.asList( new String[]{ "Navegar na internet", "Abrir e-mails", "Baixar o Firefox" } ), "Baixar o Firefox" ) );
         this.currentQuestion = questions.get( 0 );
     }
 }

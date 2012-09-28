@@ -23,7 +23,8 @@
                     <span data-bind="text: $data">Moscou</span>
                 </li>
             </ul>
-            <span id="message" data-bind="text: message"></span>
+            <span id="message" data-bind="text: message"></span><br>
+            <span id="placar" data-bind="text: placar"></span>
             <script>
                 var ThinkFast = function () {
                     var self = this;
@@ -56,10 +57,10 @@
                     {
                             if (data.question) {
 
-                                self.question(data.description);
+                                self.question(data.question.description);
                                 self.answers.removeAll();
 
-                                $.map(data.answers, function(answer) {
+                                $.map(data.question.answers, function(answer) {
                                     self.answers.push(answer);
                                 });
                                 
