@@ -24,7 +24,6 @@
                 </li>
             </ul>
             <span id="message" data-bind="text: message"></span><br>
-            <span id="placar" data-bind="text: placar"></span>
             <script>
                 var ThinkFast = function () {
                     var self = this;
