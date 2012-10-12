@@ -6,9 +6,10 @@ public class Result {
 
     private Question question;
     private String message;
-    private List<Participant> participants;
+    private List<Participant> Participants;
 
     public Result() {
+        System.out.println("Result");
     }
 
     public Result( Question question ) {
@@ -24,10 +25,10 @@ public class Result {
         this.message = message;
     }
 
-    public Result( Question question, String message, List<Participant> participants ) {
+    public Result( Question question, String message, List<Participant> Participants ) {
         this.question = question;
         this.message = message;
-        this.participants = participants;
+        this.Participants = Participants;
     }
 
     public Question getQuestion() {
@@ -47,11 +48,11 @@ public class Result {
     }
 
     public List<Participant> getParticipants() {
-        return participants;
+        return Participants;
     }
 
-    public void setParticipants( List<Participant> participants ) {
-        this.participants = participants;
+    public void setParticipants( List<Participant> Participants ) {
+        this.Participants = Participants;
     }
     
 }

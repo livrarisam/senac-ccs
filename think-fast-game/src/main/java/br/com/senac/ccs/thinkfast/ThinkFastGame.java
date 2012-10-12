@@ -9,8 +9,11 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import javax.servlet.AsyncContext;
+import javax.annotation.PostConstruct;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class ThinkFastGame {
 
     private final ConcurrentHashMap<String, Participant> participants;
@@ -24,27 +27,30 @@ public class ThinkFastGame {
         this.lock = new ReentrantLock();
     }
 
-    public void play( String id, String name, AsyncContext asyncContext ) throws IOException {
-	   lock.lock();
+    public Result play( String id, String name, Screen screen ) {
+            lock.lock();
+            Result result = null;
        try {
-            Participant participant = new Participant (id, name, asyncContext);
+            Participant participant = new Participant (id, name, screen);
 
             participants.put(id, participant);
-            participant.notify (new Result(currentQuestion, String.format("Welcome %s!", participant.getName())) );
+            result = new Result(currentQuestion, String.format("Welcome %s!", participant.getName()));
         }
         finally {
             lock.unlock();
-        }   
+       }
+       return result;
     }
 
 
-    public void bind( String id, AsyncContext asyncContext ) {
+    public void bind( String id, Screen screen ) {
         Participant participant = participants.get(id);
-        participant.setAsyncContext(asyncContext);
+        participant.setScreen(screen);
     }
 
-    public void answer( String id, String answer ) throws IOException {
+    public Result answer( String id, String answer ) {
         lock.lock();        
+        Result result = null;
         try {
             if (this.currentQuestion.getAnswer().equals(answer)) 
             {
@@ -62,14 +68,15 @@ public class ThinkFastGame {
 
             } else {
                 Participant participant = participants.get(id);
-                participant.notify(new Result("Incorreto!! :("));
+                result = new Result("Incorreto!! :(");
             }
         }
         finally {
             lock.unlock();
         }
+        return result;
     }
-
+    @PostConstruct
     public void init() {
         this.questions.add( new Question( "Qual a capital dos EUA?", Arrays.asList( new String[]{ "Washington DC", "California", "Nevada" } ), "Washington DC" ) );
         this.questions.add( new Question( "Qual a capital da Russia?", Arrays.asList( new String[]{ "Berlin", "Paris", "Moscou" } ), "Moscou" ) );

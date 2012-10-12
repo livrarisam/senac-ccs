@@ -11,7 +11,7 @@
         <h1>Think Fast Game</h1>
         <div id="participant">
             <h2>Insert your name and click start to begin:</h2>
-            <input type="text" name="participant" />
+            <input type="text" name="participant" data-bind="value: participant"/>
             <input type="button" value="start" data-bind="click: play" />
         </div>
         <br/>
@@ -23,8 +23,7 @@
                     <span data-bind="text: $data">Moscou</span>
                 </li>
             </ul>
-            <span id="message" data-bind="text: message"></span><br>
-            <span id="placar" data-bind="text: placar"></span>
+            <span id="message" data-bind="text: message" /></span><br>
             <script>
                 var ThinkFast = function () {
                     var self = this;
@@ -34,21 +33,21 @@
                     self.message = ko.observable();
 
                     self.play = function() {
-                        $.getJSON("/thinkfast", {action: "play", name: self.participant()}, function(data) {
+                        $.getJSON("/thinkfast/play", {name: self.participant()}, function(data) {
                             self.parseResult(data);
                             self.bind();
                         });
                     }
 
                     self.bind = function() {
-                        $.getJSON("/thinkfast", {action: "bind"}, function(data) {
+                        $.getJSON("/thinkfast/bind", function(data) {
                             self.parseResult(data);
                         }).complete( function(data) {
                             self.bind();
                         });
                     }
                     self.answer = function(answer) {
-                        $.getJSON("/thinkfast", {action: "answer", answer: answer}, function(data) {
+                        $.getJSON("/thinkfast/answer", {answer: answer}, function(data) {
                             self.parseResult(data);
                         });                          
                     }
