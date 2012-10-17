@@ -42,6 +42,9 @@ public class Participant {
     
     public void incrementScore() {
         this.score++;
+    }    
+    public void reduceScore() {
+        this.score--;
     }
 
     public void setScreen( Screen screen ) {

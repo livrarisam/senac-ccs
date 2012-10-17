@@ -24,6 +24,13 @@
                 </li>
             </ul>
             <span id="message" data-bind="text: message" /></span><br>
+        <p/>
+        Placar:
+            <ul data-bind="foreach: participants">
+                <li style="list-style: none;">
+                    <span data-bind="text: $data">Participantes</span>
+                </li>
+            </ul>
             <script>
                 var ThinkFast = function () {
                     var self = this;
@@ -31,6 +38,7 @@
                     self.question = ko.observable();
                     self.answers = ko.observableArray([]);
                     self.message = ko.observable();
+                    self.participants = ko.observableArray([]);                    
 
                     self.play = function() {
                         $.getJSON("/thinkfast/play", {name: self.participant()}, function(data) {
@@ -60,10 +68,14 @@
                                 self.answers.removeAll();
 
                                 $.map(data.question.answers, function(answer) {
-                                    self.answers.push(answer);
+                                    self.answers.push(answer.description);
                                 });
                                 
                             }   
+                            self.participants.removeAll();
+                            $.map(data.participants, function(participants) {
+                                self.participants.push(participants.name+":  "+participants.score);
+                            });                            
                             self.message (data.message); 
                     }
 

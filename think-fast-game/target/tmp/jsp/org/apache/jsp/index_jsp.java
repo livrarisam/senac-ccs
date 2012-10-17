@@ -67,6 +67,13 @@ public final class index_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                </li>\n");
       out.write("            </ul>\n");
       out.write("            <span id=\"message\" data-bind=\"text: message\" /></span><br>\n");
+      out.write("        <p/>\n");
+      out.write("        Placar:\n");
+      out.write("            <ul data-bind=\"foreach: participants\">\n");
+      out.write("                <li style=\"list-style: none;\">\n");
+      out.write("                    <span data-bind=\"text: $data\">Participantes</span>\n");
+      out.write("                </li>\n");
+      out.write("            </ul>\n");
       out.write("            <script>\n");
       out.write("                var ThinkFast = function () {\n");
       out.write("                    var self = this;\n");
@@ -74,6 +81,7 @@ public final class index_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                    self.question = ko.observable();\n");
       out.write("                    self.answers = ko.observableArray([]);\n");
       out.write("                    self.message = ko.observable();\n");
+      out.write("                    self.participants = ko.observableArray([]);                    \n");
       out.write("\n");
       out.write("                    self.play = function() {\n");
       out.write("                        $.getJSON(\"/thinkfast/play\", {name: self.participant()}, function(data) {\n");
@@ -103,10 +111,14 @@ public final class index_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                                self.answers.removeAll();\n");
       out.write("\n");
       out.write("                                $.map(data.question.answers, function(answer) {\n");
-      out.write("                                    self.answers.push(answer);\n");
+      out.write("                                    self.answers.push(answer.description);\n");
       out.write("                                });\n");
       out.write("                                \n");
       out.write("                            }   \n");
+      out.write("                            self.participants.removeAll();\n");
+      out.write("                            $.map(data.participants, function(participants) {\n");
+      out.write("                                self.participants.push(participants.name+\":  \"+participants.score);\n");
+      out.write("                            });                            \n");
       out.write("                            self.message (data.message); \n");
       out.write("                    }\n");
       out.write("\n");

@@ -16,8 +16,9 @@ public class Result {
         this.question = question;
     }
     
-    public Result( String message ) {
+    public Result( String message, List<Participant> Participants ) {
         this.message = message;
+        this.Participants = Participants;
     }
     
     public Result( Question question, String message ) {
